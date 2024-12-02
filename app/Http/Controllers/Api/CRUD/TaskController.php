@@ -19,6 +19,8 @@ class TaskController extends Controller
 
     /**
      * @param TaskRepository $taskRepository
+     *
+     * Initialization TaskRepository for work with Tasks
      */
     public function __construct(private readonly TaskRepository $taskRepository)
     {
@@ -26,7 +28,10 @@ class TaskController extends Controller
     }
 
     /**
-     * @return mixed
+     * @return ItemsResource
+     *
+     * Return formatted list Tasks
+     *
      */
     public function index(): ItemsResource
     {
@@ -38,7 +43,9 @@ class TaskController extends Controller
 
     /**
      * @param StoreRequest $request
-     * @return mixed
+     * @return JsonResponse
+     *
+     * Create task and return her with status
      */
     public function store(StoreRequest $request): JsonResponse
     {
@@ -56,7 +63,10 @@ class TaskController extends Controller
 
     /**
      * @param Task $task
-     * @return mixed
+     * @return ItemResource
+     *
+     *
+     * Show task by ID
      */
     public function show(Task $task): ItemResource
     {
@@ -67,9 +77,12 @@ class TaskController extends Controller
     /**
      * @param StoreRequest $request
      * @param Task $task
-     * @return mixed
+     * @return JsonResponse
+     *
+     *
+     * Update task and return task with message
      */
-    public function update(StoreRequest $request, Task $task): mixed
+    public function update(StoreRequest $request, Task $task): JsonResponse
     {
         $validated = $request->validated();
 
@@ -85,7 +98,9 @@ class TaskController extends Controller
 
     /**
      * @param Task $task
-     * @return mixed
+     * @return JsonResponse
+     *
+     * Delete task from DB and return message
      */
     public function destroy(Task $task): JsonResponse
     {

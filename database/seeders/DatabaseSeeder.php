@@ -7,6 +7,9 @@ use App\Models\User;
 
 use Illuminate\Database\Seeder;
 
+/**
+ * Generate Data for Users and Tasks
+ */
 class DatabaseSeeder extends Seeder
 {
     /**

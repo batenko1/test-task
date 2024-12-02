@@ -131,7 +131,7 @@ use Tests\TestCase;
  *         )
  *     ),
  *     @OA\Response(
- *         response=200,
+ *         response=201,
  *         description="Задача успешно создана",
  *         @OA\JsonContent(
  *             type="object",
@@ -181,7 +181,7 @@ use Tests\TestCase;
  *         )
  *     ),
  *     @OA\Response(
- *         response=200,
+ *         response=201,
  *         description="Задача успешно обновлена",
  *         @OA\JsonContent(
  *             type="object",

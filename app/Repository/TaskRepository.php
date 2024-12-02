@@ -5,17 +5,27 @@ namespace App\Repository;
 use App\Models\Task;
 use Illuminate\Support\Collection;
 
+/**
+ *
+ */
 class TaskRepository
 {
 
 
-    private Task $task;
 
-    public function __construct(Task $task)
-    {
-        $this->task = $task;
-    }
+    /**
+     * @param Task $task
+     *
+     * Initialization model Task
+     */
+    public function __construct(private readonly Task $task)
+    {}
 
+    /**
+     * @return Collection
+     *
+     * Get list tasks
+     */
     public function get(): Collection
     {
         return $this->task
@@ -24,6 +34,12 @@ class TaskRepository
     }
 
 
+    /**
+     * @param $data
+     * @return Task
+     *
+     * Create task by DATA
+     */
     public function store($data): Task
     {
         return $this->task
@@ -31,6 +47,13 @@ class TaskRepository
             ->create($data);
     }
 
+    /**
+     * @param $task
+     * @param $data
+     * @return Task
+     *
+     * Update task by DATA
+     */
     public function update($task, $data): Task
     {
         $task->update($data);
@@ -38,6 +61,12 @@ class TaskRepository
         return $task;
     }
 
+    /**
+     * @param $task
+     * @return void
+     *
+     * Delete task
+     */
     public function delete($task): void
     {
         $task->delete();
