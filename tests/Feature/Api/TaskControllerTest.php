@@ -233,11 +233,9 @@ use Tests\TestCase;
  *     security={{ "bearerAuth": {} }}
  * )
  */
-
 class TaskControllerTest extends TestCase
 {
     use RefreshDatabase;
-
 
 
     /**
@@ -251,10 +249,12 @@ class TaskControllerTest extends TestCase
         Task::factory()->count(5)->create();
 
 
-        $user = User::query()->inRandomOrder()->first();
-        Sanctum::actingAs($user);
+        $bearerToken = config('app.api_bearer_token');
 
-        $response = $this->getJson('/api/tasks');
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $bearerToken,
+        ])
+            ->getJson('/api/tasks');
 
         $response->assertStatus(200);
     }
@@ -271,8 +271,7 @@ class TaskControllerTest extends TestCase
         $readerUser = User::query()->inRandomOrder()->first();
 
 
-        $user = User::query()->inRandomOrder()->first();
-        Sanctum::actingAs($user);
+        $bearerToken = config('app.api_bearer_token');
 
         $data = [
             'title' => 'Test task',
@@ -280,10 +279,14 @@ class TaskControllerTest extends TestCase
             'reader_user_id' => $readerUser->id,
             'status' => 'pending',
             'text' => 'text',
-            'deadline_date' =>  now()->addYear()->format('Y-m-d H:i:s')
+            'deadline_date' => now()->addYear()->format('Y-m-d H:i:s')
         ];
 
-        $response = $this->postJson('/api/tasks', $data);
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ])
+            ->postJson('/api/tasks', $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('tasks', $data);
@@ -299,10 +302,13 @@ class TaskControllerTest extends TestCase
         User::factory(30)->create();
         $task = Task::factory()->create();
 
-        $user = User::query()->inRandomOrder()->first();
-        Sanctum::actingAs($user);
+        $bearerToken = config('app.api_bearer_token');
 
-        $response = $this->getJson('/api/tasks/' . $task->id);
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ])
+            ->getJson('/api/tasks/' . $task->id);
 
         $response->assertStatus(200);
 
@@ -317,7 +323,6 @@ class TaskControllerTest extends TestCase
         ]);
 
 
-
     }
 
     /**
@@ -330,8 +335,7 @@ class TaskControllerTest extends TestCase
         User::factory(30)->create();
         $task = Task::factory()->create();
 
-        $user = User::query()->inRandomOrder()->first();
-        Sanctum::actingAs($user);
+        $bearerToken = config('app.api_bearer_token');
 
         $author = User::query()->inRandomOrder()->first();
         $readerUser = User::query()->inRandomOrder()->first();
@@ -345,7 +349,11 @@ class TaskControllerTest extends TestCase
             'deadline_date' => now()->addYear()->format('Y-m-d H:i:s')
         ];
 
-        $response = $this->putJson('/api/tasks/' . $task->id, $data);
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ])
+            ->putJson('/api/tasks/' . $task->id, $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('tasks', $data);
@@ -362,10 +370,6 @@ class TaskControllerTest extends TestCase
         User::factory(30)->create();
         $task = Task::factory()->create();
 
-        $user = User::query()->inRandomOrder()->first();
-        Sanctum::actingAs($user);
-
-
         $author = User::query()->inRandomOrder()->first();
         $readerUser = User::query()->inRandomOrder()->first();
 
@@ -377,7 +381,13 @@ class TaskControllerTest extends TestCase
             'deadline_date' => now()->addYear()
         ];
 
-        $response = $this->putJson('/api/tasks/' . $task->id, $data);
+        $bearerToken = config('app.api_bearer_token');
+
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ])
+            ->putJson('/api/tasks/' . $task->id, $data);
 
         $response->assertStatus(422);
     }
@@ -395,8 +405,7 @@ class TaskControllerTest extends TestCase
         $author = User::query()->inRandomOrder()->first();
         $readerUser = User::query()->inRandomOrder()->first();
 
-        $user = User::query()->inRandomOrder()->first();
-        Sanctum::actingAs($user);
+        $bearerToken = config('app.api_bearer_token');
 
         $data = [
             'title' => 'Test task',
@@ -407,7 +416,11 @@ class TaskControllerTest extends TestCase
             'deadline_date' => now()->addYear()
         ];
 
-        $response = $this->putJson('/api/tasks/' . $taskId, $data);
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ])
+            ->putJson('/api/tasks/' . $taskId, $data);
 
         $response->assertStatus(404);
     }
@@ -423,10 +436,14 @@ class TaskControllerTest extends TestCase
         User::factory(30)->create();
         $task = Task::factory()->create();
 
-        $user = User::query()->inRandomOrder()->first();
-        Sanctum::actingAs($user);
+        $bearerToken = config('app.api_bearer_token');
 
-        $response = $this->deleteJson('/api/tasks/' . $task->id);
+
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ])
+            ->deleteJson('/api/tasks/' . $task->id);
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
@@ -439,11 +456,14 @@ class TaskControllerTest extends TestCase
      */
     public function test_bad_destroy(): void
     {
-        $user = User::factory()->create();
-        Sanctum::actingAs($user);
+        $bearerToken = config('app.api_bearer_token');
 
         $taskId = rand(10000, 100000);
-        $response = $this->deleteJson('/api/tasks/' . $taskId);
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . $bearerToken,
+            ])
+            ->deleteJson('/api/tasks/' . $taskId);
 
         $response->assertStatus(404);
     }
