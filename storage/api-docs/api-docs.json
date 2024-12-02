@@ -1,0 +1,374 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API",
+        "description": "Документация запросов",
+        "contact": {
+            "name": "API Support",
+            "email": "admin@admin.com"
+        },
+        "version": "2.0.0"
+    },
+    "paths": {
+        "/api/tasks": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Получить список задач",
+                "description": "Этот метод позволяет получить список всех задач",
+                "operationId": "86d3865989d93db73ba46a95c47c14e9",
+                "responses": {
+                    "200": {
+                        "description": "Список задач из базы данных",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "author_id": {},
+                                            "reader_user_id": {},
+                                            "text": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "type": "string"
+                                            },
+                                            "deadline_date": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Создание новой задачи",
+                "description": "Этот метод позволяет создать новую задачу",
+                "operationId": "8b381aa4ddf3ab6513e75837d6c0298b",
+                "requestBody": {
+                    "description": "Данные для создания задачи",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "author_id": {
+                                        "type": "integer"
+                                    },
+                                    "reader_user_id": {
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    },
+                                    "text": {
+                                        "type": "string"
+                                    },
+                                    "deadline_date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Задача успешно создана",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "format": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "author_id": {
+                                            "type": "integer"
+                                        },
+                                        "reader_user_id": {
+                                            "type": "integer"
+                                        },
+                                        "text": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "deadline_date": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка в данных для создания задачи"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tasks/{task}": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Получить данные одной задачи",
+                "description": "Этот метод позволяет получить данные задачи по идентификатору",
+                "operationId": "d612f4132236a64483d56d78df77b5ca",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "Идентификатор задачи",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Данные задачи по идентификатору",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "author_id": {},
+                                        "reader_user_id": {},
+                                        "text": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "deadline_date": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Задача с таким идентификатором не найдена"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Обновление задачи",
+                "description": "Этот метод позволяет обновить задачу по идентификатору",
+                "operationId": "e0cb0c51f15f89626fd2e3c3bc476994",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "Идентификатор задачи",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Данные для обновления задачи",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "author_id": {
+                                        "type": "integer"
+                                    },
+                                    "reader_user_id": {
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    },
+                                    "text": {
+                                        "type": "string"
+                                    },
+                                    "deadline_date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Задача успешно обновлена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "format": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "author_id": {
+                                            "type": "integer"
+                                        },
+                                        "reader_user_id": {
+                                            "type": "integer"
+                                        },
+                                        "text": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "deadline_date": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Задача с таким идентификатором не найдена"
+                    },
+                    "422": {
+                        "description": "Ошибка в данных для обновления задачи"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Удаление задачи",
+                "description": "Этот метод позволяет удалить задачу по идентификатору",
+                "operationId": "e716de0d815d1d0b846ba7c5fc5d1449",
+                "parameters": [
+                    {
+                        "name": "task",
+                        "in": "path",
+                        "description": "Идентификатор задачи",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Задача успешно удалена"
+                    },
+                    "404": {
+                        "description": "Задача с таким идентификатором не найдена"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Task",
+            "description": "Task"
+        }
+    ]
+}

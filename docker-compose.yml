@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+    nginx:
+        image: nginx:alpine
+        volumes:
+            - ./:/var/www
+            - ./_docker/nginx/conf.d/nginx.conf:/etc/nginx/nginx.conf
+            - ./storage/app/public:/var/www/storage/app/public
+        ports:
+            - "8888:80"
+        depends_on:
+            - app
+        container_name: nginx
+
+    app:
+        build:
+            context: .
+            dockerfile: _docker/app/Dockerfile
+        volumes:
+            - ./:/var/www
+            - ./_docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
+            - ./_docker/app/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+        depends_on:
+            - db
+            - phpmyadmin
+        container_name: app
+        environment:
+            - REDIS_HOST=redis
+    db:
+        image: mysql:8.0
+        restart: always
+        volumes:
+            - ./tmp/db:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: root
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "8101:3306"
+        command: mysqld --character-set-server=utf8 --skip-log-bin --collation-server=utf8_unicode_ci --sort-buffer-size=50M
+        container_name: db
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            - PMA_HOST=db
+            - UPLOAD_LIMIT=2000M
+            - SORT_BUFFER_SIZE=50M
+        volumes:
+            - /sessions
+        ports:
+            - "8080:80"
+        container_name: phpmyadmin
