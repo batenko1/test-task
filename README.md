@@ -49,6 +49,3 @@ API, Feature and Unit tests.
 
 Now the project is ready for use!
 
----------
-
-# ENG
