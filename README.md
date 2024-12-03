@@ -18,5 +18,6 @@ API, Feature и Unit тесты.
 10. **Запустите тесты:** выполните `docker exec -it app php artisan test`.
 11. Через postman можно обратиться к [http://localhost:8888/api/tasks](http://localhost:8888/api/tasks)
     с Bearer Token - token для получения доступа к таскам. Сам токен лежит в .env  - API_BEARER_TOKEN
+12. Swagger документация после ее генерация из пункта 9 будет доступна поссылке [http://localhost:8888/admin/swagger](http://localhost:8888/admin/swagger)
 
 Теперь проект готов к использованию!
