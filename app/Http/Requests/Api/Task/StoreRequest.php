@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Api\Task;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreRequest extends FormRequest
 {
@@ -30,5 +32,23 @@ class StoreRequest extends FormRequest
             'text' => 'required|string',
             'deadline_date' => 'required|date'
         ];
+    }
+
+    public function messages(): array
+    {
+        return parent::messages();
+    }
+
+    /**
+     * @param Validator $validator
+     * @return void
+     *
+     * Return the first validation error as a JSON response
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        $errors = $validator->errors()->first();
+        $response = response()->json(['error' => $errors], 422);
+        throw new HttpResponseException($response);
     }
 }
