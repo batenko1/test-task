@@ -49,7 +49,17 @@ use Tests\TestCase;
  *                     property="deadline_date",
  *                     type="string",
  *                     format="date-time"
- *                 )
+ *                 ),
+ *                 @OA\Property(
+ *                 property="created_at",
+ *                 type="string",
+ *                 format="date-time"
+ *             ),
+ *             @OA\Property(
+ *                 property="updated_at",
+ *                 type="string",
+ *                 format="date-time"
+ *             )
  *             )
  *         )
  *     ),
@@ -102,7 +112,18 @@ use Tests\TestCase;
  *                 property="deadline_date",
  *                 type="string",
  *                 format="date-time"
+ *             ),
+ *             @OA\Property(
+ *                 property="created_at",
+ *                 type="string",
+ *                 format="date-time"
+ *             ),
+ *             @OA\Property(
+ *                 property="updated_at",
+ *                 type="string",
+ *                 format="date-time"
  *             )
+ *
  *         )
  *     ),
  *     @OA\Response(

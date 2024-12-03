@@ -17,7 +17,7 @@
                 ],
                 "summary": "Получить список задач",
                 "description": "Этот метод позволяет получить список всех задач",
-                "operationId": "86d3865989d93db73ba46a95c47c14e9",
+                "operationId": "826a7b8d1981d45cd20a035e24a69135",
                 "responses": {
                     "200": {
                         "description": "Список задач из базы данных",
@@ -44,6 +44,14 @@
                                             "deadline_date": {
                                                 "type": "string",
                                                 "format": "date-time"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
                                             }
                                         },
                                         "type": "object"
@@ -65,7 +73,7 @@
                 ],
                 "summary": "Создание новой задачи",
                 "description": "Этот метод позволяет создать новую задачу",
-                "operationId": "8b381aa4ddf3ab6513e75837d6c0298b",
+                "operationId": "0be63638b3240240915ed938a2469dcf",
                 "requestBody": {
                     "description": "Данные для создания задачи",
                     "required": true,
@@ -99,7 +107,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Задача успешно создана",
                         "content": {
                             "application/json": {
@@ -160,7 +168,7 @@
                 ],
                 "summary": "Получить данные одной задачи",
                 "description": "Этот метод позволяет получить данные задачи по идентификатору",
-                "operationId": "d612f4132236a64483d56d78df77b5ca",
+                "operationId": "88edb58a75820edbf994eeffbb69959a",
                 "parameters": [
                     {
                         "name": "task",
@@ -197,6 +205,14 @@
                                         "deadline_date": {
                                             "type": "string",
                                             "format": "date-time"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
                                         }
                                     },
                                     "type": "object"
@@ -220,7 +236,7 @@
                 ],
                 "summary": "Обновление задачи",
                 "description": "Этот метод позволяет обновить задачу по идентификатору",
-                "operationId": "e0cb0c51f15f89626fd2e3c3bc476994",
+                "operationId": "98c32b5bac9d95c64f03805b10c69c67",
                 "parameters": [
                     {
                         "name": "task",
@@ -266,7 +282,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Задача успешно обновлена",
                         "content": {
                             "application/json": {
@@ -328,7 +344,7 @@
                 ],
                 "summary": "Удаление задачи",
                 "description": "Этот метод позволяет удалить задачу по идентификатору",
-                "operationId": "e716de0d815d1d0b846ba7c5fc5d1449",
+                "operationId": "1070fba4ab0b7343e4459e51045495a3",
                 "parameters": [
                     {
                         "name": "task",
