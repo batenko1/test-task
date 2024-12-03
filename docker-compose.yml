@@ -25,8 +25,6 @@ services:
             - db
             - phpmyadmin
         container_name: app
-        environment:
-            - REDIS_HOST=redis
     db:
         image: mysql:8.0
         restart: always
