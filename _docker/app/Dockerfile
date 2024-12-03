@@ -9,4 +9,9 @@ RUN install-php-extensions sockets zip gmp pcntl ffi mysqli pdo_mysql opcache ex
 RUN apk add --no-cache supervisor
 # RUN install-php-extensions xdebug
 
+# Устанавливаем права доступа на папки storage и bootstrap/cache
+RUN mkdir -p /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
 WORKDIR /var/www
