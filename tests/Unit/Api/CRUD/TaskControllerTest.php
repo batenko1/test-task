@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace tests\Unit\Api\CRUD;
 
 use App\Http\Controllers\Api\CRUD\TaskController;
 use App\Http\Requests\Api\Task\StoreRequest;
@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Mockery;
-use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 
 class TaskControllerTest extends TestCase

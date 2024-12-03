@@ -1,12 +1,11 @@
 <?php
 
-namespace Tests\Feature\Api;
+namespace tests\Feature\Api\CRUD;
 
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
 use OpenApi\Annotations as OA;
 use Tests\TestCase;
 
