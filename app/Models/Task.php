@@ -17,6 +17,8 @@ class Task extends Model
     /**
      * @var string[]
      *
+     * Fillable field for create or update by ORM
+     *
      */
     protected $fillable = [
         'author_id',
@@ -31,8 +33,15 @@ class Task extends Model
 
     /**
      * @var string[]
+     *
+     * Types for fields
      */
     protected $casts = [
+        'author_id' => 'integer',
+        'reader_user_id' => 'integer',
+        'title' => 'string',
+        'status' => 'string',
+        'text' => 'string',
         'created_at' => 'datetime',
         'deadline' => 'datetime',
         'updated_at' => 'datetime',
