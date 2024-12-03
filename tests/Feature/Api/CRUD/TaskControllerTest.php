@@ -236,6 +236,17 @@ class TaskControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private string $link = '/api/tasks/';
+
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . config('app.api_bearer_token')
+        ]);
+    }
 
     /**
      * Test the index method.
@@ -247,13 +258,7 @@ class TaskControllerTest extends TestCase
         User::factory(30)->create();
         Task::factory()->count(5)->create();
 
-
-        $bearerToken = config('app.api_bearer_token');
-
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $bearerToken,
-        ])
-            ->getJson('/api/tasks');
+        $response = $this->getJson($this->link);
 
         $response->assertStatus(200);
     }
@@ -270,7 +275,6 @@ class TaskControllerTest extends TestCase
         $readerUser = User::query()->inRandomOrder()->first();
 
 
-        $bearerToken = config('app.api_bearer_token');
 
         $data = [
             'title' => 'Test task',
@@ -281,11 +285,7 @@ class TaskControllerTest extends TestCase
             'deadline_date' => now()->addYear()->format('Y-m-d H:i:s')
         ];
 
-        $response = $this
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ])
-            ->postJson('/api/tasks', $data);
+        $response = $this->postJson($this->link, $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('tasks', $data);
@@ -300,14 +300,7 @@ class TaskControllerTest extends TestCase
     {
         User::factory(30)->create();
         $task = Task::factory()->create();
-
-        $bearerToken = config('app.api_bearer_token');
-
-        $response = $this
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ])
-            ->getJson('/api/tasks/' . $task->id);
+        $response = $this->getJson($this->link . $task->id);
 
         $response->assertStatus(200);
 
@@ -334,8 +327,6 @@ class TaskControllerTest extends TestCase
         User::factory(30)->create();
         $task = Task::factory()->create();
 
-        $bearerToken = config('app.api_bearer_token');
-
         $author = User::query()->inRandomOrder()->first();
         $readerUser = User::query()->inRandomOrder()->first();
 
@@ -348,11 +339,7 @@ class TaskControllerTest extends TestCase
             'deadline_date' => now()->addYear()->format('Y-m-d H:i:s')
         ];
 
-        $response = $this
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ])
-            ->putJson('/api/tasks/' . $task->id, $data);
+        $response = $this->putJson($this->link . $task->id, $data);
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('tasks', $data);
@@ -380,13 +367,8 @@ class TaskControllerTest extends TestCase
             'deadline_date' => now()->addYear()
         ];
 
-        $bearerToken = config('app.api_bearer_token');
 
-        $response = $this
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ])
-            ->putJson('/api/tasks/' . $task->id, $data);
+        $response = $this->putJson($this->link . $task->id, $data);
 
         $response->assertStatus(422);
     }
@@ -404,7 +386,6 @@ class TaskControllerTest extends TestCase
         $author = User::query()->inRandomOrder()->first();
         $readerUser = User::query()->inRandomOrder()->first();
 
-        $bearerToken = config('app.api_bearer_token');
 
         $data = [
             'title' => 'Test task',
@@ -415,11 +396,7 @@ class TaskControllerTest extends TestCase
             'deadline_date' => now()->addYear()
         ];
 
-        $response = $this
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ])
-            ->putJson('/api/tasks/' . $taskId, $data);
+        $response = $this->putJson($this->link . $taskId, $data);
 
         $response->assertStatus(404);
     }
@@ -436,14 +413,9 @@ class TaskControllerTest extends TestCase
 
         $task = Task::factory()->create();
 
-        $bearerToken = config('app.api_bearer_token');
 
 
-        $response = $this
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ])
-            ->deleteJson('/api/tasks/' . $task->id);
+        $response = $this->deleteJson($this->link . $task->id);
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
@@ -456,14 +428,9 @@ class TaskControllerTest extends TestCase
      */
     public function test_bad_destroy(): void
     {
-        $bearerToken = config('app.api_bearer_token');
 
         $taskId = rand(10000, 100000);
-        $response = $this
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $bearerToken,
-            ])
-            ->deleteJson('/api/tasks/' . $taskId);
+        $response = $this->deleteJson($this->link . $taskId);
 
         $response->assertStatus(404);
     }
