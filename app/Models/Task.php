@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,5 +56,17 @@ class Task extends Model
     public function reader(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reader_user_id');
+    }
+
+    /**
+     * @param Builder $builder
+     * @param int $id
+     * @return Builder
+     *
+     * Find by id scope
+     */
+    public function scopeId(Builder $builder, int $id): Builder
+    {
+        return $builder->whereId($id);
     }
 }

@@ -434,6 +434,7 @@ class TaskControllerTest extends TestCase
     {
 
         User::factory(30)->create();
+
         $task = Task::factory()->create();
 
         $bearerToken = config('app.api_bearer_token');

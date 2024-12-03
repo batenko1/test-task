@@ -11,7 +11,7 @@ use App\Repository\TaskRepository;
 use Illuminate\Http\JsonResponse;
 
 /**
- *
+ * Controller for work with tasks
  */
 class TaskController extends Controller
 {
@@ -86,7 +86,7 @@ class TaskController extends Controller
     {
         $validated = $request->validated();
 
-        $task = $this->taskRepository->update($task, $validated);
+        $task = $this->taskRepository->update($task->id, $validated);
 
         $resource = ItemResource::make($task);
 
@@ -104,8 +104,10 @@ class TaskController extends Controller
      */
     public function destroy(Task $task): JsonResponse
     {
-        $this->taskRepository->delete($task);
+        $this->taskRepository->delete($task->id);
 
-        return response()->json(['message' => 'Task deleted successfully'], 204);
+        return response()->json([
+            'message' => 'Task deleted successfully'
+        ], 204);
     }
 }

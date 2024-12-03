@@ -107,56 +107,70 @@ class TaskControllerTest extends TestCase
      */
     public function test_update(): void
     {
+        // Создаём 30 пользователей
         User::factory(30)->create();
 
+        // Выбираем автора и читателя случайным образом
         $author = User::query()->inRandomOrder()->first();
         $readerUser = User::query()->inRandomOrder()->first();
 
+        // Создаём задачу
+        $task = Task::factory()->create();
+
+        // Данные для обновления задачи
         $data = [
             'title' => 'Test task',
             'author_id' => $author->id,
             'reader_user_id' => $readerUser->id,
             'status' => 'pending',
             'text' => 'text',
-            'deadline_date' => now()->addYear()
+            'deadline_date' => now()->addYear()->toDateTimeString(),
         ];
 
-        $task = Mockery::mock(Task::class)->makePartial();
+        // Создаём объект задачи с обновлёнными данными
+        $updatedTask = new Task(array_merge($task->toArray(), $data));
 
-        $task->shouldReceive('jsonSerialize')->andReturn($data);
-        $task->shouldReceive('getAttribute')->andReturnUsing(function ($attribute) use ($data) {
-            return $data[$attribute] ?? null;
-        });
-        $task->shouldReceive('toArray')->andReturn($data);
-
+        // Мокаем TaskRepository
         $taskRepository = Mockery::mock(TaskRepository::class);
-        $taskRepository->shouldReceive('update')->once()->with($task, $data)->andReturn($task);
+        $taskRepository->shouldReceive('update')
+            ->once()
+            ->with($task->id, $data)
+            ->andReturn($updatedTask);
 
-        $request = StoreRequest::create('/api/tasks/' . $task->id, 'PUT', $data);
-        $request->setJson(new \Illuminate\Http\Request($data));
-        $request->setLaravelSession(app('session')->driver());
-        $request->setValidator(Validator::make($data, (new StoreRequest)->rules()));
+        // Создаём запрос с валидированными данными
+        $request = Mockery::mock(StoreRequest::class)->makePartial();
+        $request->shouldReceive('validated')->andReturn($data);
 
+        // Создаём контроллер с моком репозитория
         $controller = new TaskController($taskRepository);
 
+        // Выполняем действие
         $response = $controller->update($request, $task);
 
+        // Проверяем результат
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(201, $response->getStatusCode());
 
-        $this->assertEquals([
+        $expectedResponse = [
             'message' => 'Task updated successfully',
             'task' => [
-                'id' => $task->id,
-                'title' => $task->title,
-                'author_id' => $task->author_id,
-                'reader_user_id' => $task->reader_user_id,
-                'status' => $task->status,
-                'text' => $task->text,
-                'deadline_date' => Carbon::parse($task->deadline_date)->format('Y-m-d H:i:s'),
-            ]
-        ], $response->getData(true));
+                'id' => $updatedTask->id,
+                'title' => $updatedTask->title,
+                'author_id' => $updatedTask->author_id,
+                'reader_user_id' => $updatedTask->reader_user_id,
+                'status' => $updatedTask->status,
+                'text' => $updatedTask->text,
+                'deadline_date' => $updatedTask->deadline_date,
+                'created_at' => $updatedTask->created_at,
+                'updated_at' => $updatedTask->updated_at,
+            ],
+        ];
+
+        $this->assertEquals($expectedResponse, $response->getData(true));
     }
+
+
+
 
 
 
@@ -171,10 +185,12 @@ class TaskControllerTest extends TestCase
     public function test_destroy(): void
     {
 
-        $task = new Task(['title' => 'Test task']);
+        User::factory(30)->create();
+        Task::factory(3)->create();
+        $task = Task::query()->inRandomOrder()->first();
 
         $taskRepository = Mockery::mock(TaskRepository::class);
-        $taskRepository->shouldReceive('delete')->once()->with($task);
+        $taskRepository->shouldReceive('delete')->once()->with($task->id);
 
         $controller = new TaskController($taskRepository);
 

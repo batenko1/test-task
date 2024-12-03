@@ -17,6 +17,8 @@ class ItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
             'title' => $this->title,
             'author_id' => $this->author_id,
             'reader_user_id' => $this->reader_user_id,
