@@ -2,12 +2,13 @@
 
 namespace App\Http\Resources\Api\Task;
 
-use Carbon\Carbon;
+use App\Traits\FormatsDates;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ItemResource extends JsonResource
 {
+    use FormatsDates;
     /**
      * Transform the resource into an array.
      *
@@ -17,14 +18,14 @@ class ItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),
+            'created_at' => $this->formatDate($this->created_at),
+            'updated_at' => $this->formatDate($this->updated_at),
             'title' => $this->title,
             'author_id' => $this->author_id,
             'reader_user_id' => $this->reader_user_id,
             'text' => $this->text,
             'status' => $this->status,
-            'deadline_date' => Carbon::parse($this->deadline_date)->format('Y-m-d H:i:s')
+            'deadline_date' => $this->formatDate($this->deadline_date),
         ];
     }
 }

@@ -55,9 +55,7 @@ class Task extends Model
         'title',
         'status',
         'text',
-        'created_at',
         'deadline_date',
-        'updated_at',
     ];
 
     /**
