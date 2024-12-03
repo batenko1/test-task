@@ -77,8 +77,8 @@ class TaskRepository implements RepositoryInterface
     }
 
     /**
-     * @param $task
-     * @return void
+     * @param int $id
+     * @return bool Delete task
      *
      * Delete task
      */
