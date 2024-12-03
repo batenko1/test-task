@@ -21,7 +21,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-_docker
 tmp
 composer.lock
 .DS_Store
