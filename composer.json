@@ -8,6 +8,8 @@
     "require": {
         "php": "^8.2",
         "darkaonline/l5-swagger": "^8.5",
+        "jobcloud/php-kafka-lib": "^2.0",
+        "jobcloud/php-kafka-schema-registry-client": "^2.1",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9"

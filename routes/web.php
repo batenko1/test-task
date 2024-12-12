@@ -3,5 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $producer = app(\App\Kafka\ProducerService::class);
+    $producer->sendMessage('Test message from Laravel with Docker');
 });
