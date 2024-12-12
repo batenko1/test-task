@@ -1,12 +1,12 @@
 FROM php:8.3-fpm-alpine
 
 # Установка необходимых пакетов
-RUN apk add --no-cache git vim zip supervisor librdkafka librdkafka-dev
+RUN apk add --no-cache git vim zip supervisor librdkafka librdkafka-dev rabbitmq-c rabbitmq-c-dev
 
 # Установка PHP-расширений
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-RUN install-php-extensions sockets zip gmp pcntl ffi mysqli pdo_mysql opcache exif gd rdkafka
+RUN install-php-extensions sockets zip gmp pcntl ffi mysqli pdo_mysql opcache exif gd rdkafka amqp
 
 # Создаем папки и устанавливаем права
 RUN mkdir -p /var/www/storage/framework/views \
