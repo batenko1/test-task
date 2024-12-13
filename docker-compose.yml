@@ -47,11 +47,13 @@ services:
             - ./:/var/www
             - ./_docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
             - ./_docker/app/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+            - ./_docker/supervisord.conf:/etc/supervisord.conf
         depends_on:
             - db
             - phpmyadmin
             - kafka
         container_name: app
+        command: ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
     db:
         image: mysql:8.0
         restart: always
