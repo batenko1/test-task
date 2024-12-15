@@ -10,49 +10,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Docker Compose (if missing)
-        run: |
-          if ! docker compose version; then
-            sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-            docker-compose --version
-          fi
-      # 1. Checkout the repository
+      # 1. Проверить, что Docker Compose доступен
+      - name: Check Docker Compose
+        run: docker compose version
+
+      # 2. Checkout репозитория
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # 2. Copy .env.example to .env
+      # 3. Настройка .env файла
       - name: Setup .env file
         run: cp .env.example .env
 
-      # 3. Start Docker containers
+      # 4. Запуск Docker контейнеров
       - name: Start Docker Containers
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
-      # 4. Install dependencies
+      # 5. Установка зависимостей
       - name: Install Dependencies
         run: docker exec -it app composer install
 
-      # 5. Generate application key
+      # 6. Генерация ключа приложения
       - name: Generate Application Key
         run: docker exec -it app php artisan key:generate
 
-      # 6. Run migrations
+      # 7. Применение миграций
       - name: Run Migrations
         run: docker exec -it app php artisan migrate
 
-      # 7. Seed the database
+      # 8. Запуск сидеров
       - name: Run Seeders
         run: docker exec -it app php artisan db:seed
 
-      # 8. Generate Swagger Documentation
+      # 9. Генерация Swagger документации
       - name: Generate Swagger Documentation
         run: docker exec -it app php artisan l5-swagger:generate
 
-      # 9. Run Tests
+      # 10. Запуск тестов
       - name: Run Tests
         run: docker exec -it app php artisan test
-
-      # Optional: Display Swagger URL
-      - name: Display Swagger URL
-        run: echo "Swagger documentation will be available at http://localhost:8888/admin/swagger"
