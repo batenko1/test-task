@@ -1,8 +1,51 @@
-name: Demo workflow
-on: workflow_dispatch
+name: Test Task Workflow
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  print:
+  setup-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Print to console
-        run: echo Hello GH Actions
+      # 1. Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 2. Copy .env.example to .env
+      - name: Setup .env file
+        run: cp .env.example .env
+
+      # 3. Start Docker containers
+      - name: Start Docker Containers
+        run: docker-compose up -d --build
+
+      # 4. Install dependencies
+      - name: Install Dependencies
+        run: docker exec -it app composer install
+
+      # 5. Generate application key
+      - name: Generate Application Key
+        run: docker exec -it app php artisan key:generate
+
+      # 6. Run migrations
+      - name: Run Migrations
+        run: docker exec -it app php artisan migrate
+
+      # 7. Seed the database
+      - name: Run Seeders
+        run: docker exec -it app php artisan db:seed
+
+      # 8. Generate Swagger Documentation
+      - name: Generate Swagger Documentation
+        run: docker exec -it app php artisan l5-swagger:generate
+
+      # 9. Run Tests
+      - name: Run Tests
+        run: docker exec -it app php artisan test
+
+      # Optional: Display Swagger URL
+      - name: Display Swagger URL
+        run: echo "Swagger documentation will be available at http://localhost:8888/admin/swagger"
