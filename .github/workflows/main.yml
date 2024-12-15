@@ -26,6 +26,18 @@ jobs:
       - name: Start Docker Containers
         run: docker compose up -d --build
 
+      - name: Wait for RabbitMQ
+        run: |
+          for i in {1..30}; do
+            if docker exec app nc -z rabbitmq 5672; then
+              echo "RabbitMQ is up!"
+              break
+            else
+              echo "Waiting for RabbitMQ..."
+              sleep 5
+            fi
+          done
+
       # 5. Установка зависимостей
       - name: Install Dependencies
         run: docker exec app composer install
