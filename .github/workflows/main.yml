@@ -10,11 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Установить Docker Compose (если не установлен)
-      - name: Ensure Docker Compose is Installed
+      - name: Install Docker Compose (if missing)
         run: |
-          docker compose version || sudo apt-get update && \
-          sudo apt-get install -y docker-compose-plugin
+          if ! docker compose version; then
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            docker-compose --version
+          fi
       # 1. Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
