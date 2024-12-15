@@ -28,24 +28,24 @@ jobs:
 
       # 5. Установка зависимостей
       - name: Install Dependencies
-        run: docker exec -it app composer install
+        run: docker exec app composer install
 
       # 6. Генерация ключа приложения
       - name: Generate Application Key
-        run: docker exec -it app php artisan key:generate
+        run: docker exec app php artisan key:generate
 
       # 7. Применение миграций
       - name: Run Migrations
-        run: docker exec -it app php artisan migrate
+        run: docker exec app php artisan migrate
 
       # 8. Запуск сидеров
       - name: Run Seeders
-        run: docker exec -it app php artisan db:seed
+        run: docker exec app php artisan db:seed
 
       # 9. Генерация Swagger документации
       - name: Generate Swagger Documentation
-        run: docker exec -it app php artisan l5-swagger:generate
+        run: docker exec app php artisan l5-swagger:generate
 
       # 10. Запуск тестов
       - name: Run Tests
-        run: docker exec -it app php artisan test
+        run: docker exec app php artisan test
