@@ -1,11 +1,25 @@
-
+version: '3.8'
 
 services:
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        ports:
+            - "5672:5672" # AMQP port
+            - "15672:15672" # Web interface
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
+        networks:
+            - my_network
+
     zookeeper:
         image: confluentinc/cp-zookeeper:latest
         environment:
             ZOOKEEPER_CLIENT_PORT: 2181
             ZOOKEEPER_TICK_TIME: 2000
+        networks:
+            - my_network
 
     kafka:
         image: confluentinc/cp-kafka:latest
@@ -19,6 +33,9 @@ services:
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         container_name: kafka
+        networks:
+            - my_network
+
     nginx:
         image: nginx:alpine
         volumes:
@@ -30,6 +47,8 @@ services:
         depends_on:
             - app
         container_name: nginx
+        networks:
+            - my_network
 
     app:
         build:
@@ -39,11 +58,22 @@ services:
             - ./:/var/www
             - ./_docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
             - ./_docker/app/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+            - ./_docker/supervisord.conf:/etc/supervisord.conf
         depends_on:
             - db
             - phpmyadmin
             - kafka
+            - centrifugo
+        environment:
+            - BROADCAST_DRIVER=centrifugo
+            - CENTRIFUGO_HOST=centrifugo
+            - CENTRIFUGO_PORT=8000
+            - CENTRIFUGO_SECRET=your-centrifugo-secret
         container_name: app
+        command: ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+        networks:
+            - my_network
+
     db:
         image: mysql:8.0
         restart: always
@@ -56,6 +86,8 @@ services:
             - "8101:3306"
         command: mysqld --character-set-server=utf8 --skip-log-bin --collation-server=utf8_unicode_ci --sort-buffer-size=50M
         container_name: db
+        networks:
+            - my_network
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -68,3 +100,20 @@ services:
         ports:
             - "8080:80"
         container_name: phpmyadmin
+        networks:
+            - my_network
+
+    centrifugo:
+        image: centrifugo/centrifugo:v5
+        container_name: centrifugo
+        volumes:
+            - ./centrifugo/config.json:/centrifugo/config.json
+        ports:
+            - "8000:8000"
+        command: centrifugo -c /centrifugo/config.json
+        networks:
+            - my_network
+
+networks:
+    my_network:
+        driver: bridge

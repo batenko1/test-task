@@ -1,0 +1,63 @@
+name: Test Task Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Проверить, что Docker Compose доступен
+      - name: Check Docker Compose
+        run: docker compose version
+
+      # 2. Checkout репозитория
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # 3. Настройка .env файла
+      - name: Setup .env file
+        run: cp .env.example .env
+
+      # 4. Запуск Docker контейнеров
+      - name: Start Docker Containers
+        run: docker compose up -d --build
+
+      - name: Wait for RabbitMQ
+        run: |
+          for i in {1..30}; do
+            if docker exec app nc -z rabbitmq 5672; then
+              echo "RabbitMQ is up!"
+              break
+            else
+              echo "Waiting for RabbitMQ..."
+              sleep 5
+            fi
+          done
+
+      # 5. Установка зависимостей
+      - name: Install Dependencies
+        run: docker exec app composer install
+
+      # 6. Генерация ключа приложения
+      - name: Generate Application Key
+        run: docker exec app php artisan key:generate
+
+      # 7. Применение миграций
+      - name: Run Migrations
+        run: docker exec app php artisan migrate
+
+      # 8. Запуск сидеров
+      - name: Run Seeders
+        run: docker exec app php artisan db:seed
+
+      # 9. Генерация Swagger документации
+      - name: Generate Swagger Documentation
+        run: docker exec app php artisan l5-swagger:generate
+
+      # 10. Запуск тестов
+      - name: Run Tests
+        run: docker exec app php artisan test

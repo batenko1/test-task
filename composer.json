@@ -7,12 +7,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "batenko1/posts": "*",
         "darkaonline/l5-swagger": "^8.5",
+        "denis660/laravel-centrifugo": "^5.0",
         "jobcloud/php-kafka-lib": "^2.0",
         "jobcloud/php-kafka-schema-registry-client": "^2.1",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "php-amqplib/php-amqplib": "^3.7",
+        "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.2",
